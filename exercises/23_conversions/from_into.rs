@@ -39,22 +39,20 @@ impl From<&str> for Person {
     fn from(s: &str) -> Self {
         let elements: Vec<&str> = s.split(",").collect();
         if elements.len() != 2 {
-            Person::default()
-        } else {
-            let name = elements[0];
-            match name.len() {
-                0 => Person::default(),
-                _ => {
-                    let el = elements[1];
-                    match el.parse::<u8>() {
-                        Err(_) => Person::default(),
-                        Ok(age) => Person {
-                            name: name.to_string(),
-                            age,
-                        },
-                    }
-                }
-            }
+            return Self::default();
+        }
+        let name = elements[0];
+        if name.is_empty() {
+            return Self::default();
+        }
+        let el = elements[1];
+        let Ok(age) = el.parse() else {
+            return Self::default();
+        };
+
+        Self {
+            name: name.to_string(),
+            age,
         }
     }
 }
